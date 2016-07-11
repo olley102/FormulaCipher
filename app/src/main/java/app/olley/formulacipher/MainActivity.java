@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             if (i < 3) {
                 xnul.add(0);
             }
-            b.add(0);
+            b.add(0);   // inital formula parameters
             c.add(0);
             m.add(0);
         }
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     String address1 = "b" + (i + '0');
                     String address2 = "c" + (i + '0');
                     String address3 = "m" + (i + '0');
-                    b.set(i, sharedPref.getInt(address1, getString(R.string.b_default).charAt(i) - '0'));
+                    b.set(i, sharedPref.getInt(address1, getString(R.string.b_default).charAt(i) - '0'));   // get saved data
                     c.set(i, sharedPref.getInt(address2, getString(R.string.c_default).charAt(i) - '0'));
                     m.set(i, sharedPref.getInt(address3, getString(R.string.m_default).charAt(i) - '0'));
                 }
@@ -171,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                Log.d("xnul", xnul.toString());
                 String plaintext = ptBox.getText().toString();
                 String ciphertext = ctBox.getText().toString();
                 String publickey = keyBox.getText().toString();
@@ -282,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
                         boolean error = false;
                         for (int i = 0; i < plaintext.length(); i++) {
                             if (alpha.contains(plaintext.charAt(i))) {
-                                dec.add(alpha.indexOf(plaintext.charAt(i)));
+                                dec.add(alpha.indexOf(plaintext.charAt(i)));    // convert characters into corresponding indeces
                             }
                             else if (lalpha.contains(plaintext.charAt(i))) {
                                 dec.add(lalpha.indexOf(plaintext.charAt(i)));
@@ -291,19 +289,19 @@ public class MainActivity extends AppCompatActivity {
                                 error = true;
                                 break;
                             }
-
-                            Random random = new Random();
+                            
+                            Random random = new Random();   // generate public key
                             keyb.add(b.get(random.nextInt(9)));
                             keyc.add(c.get(random.nextInt(9)));
                             keym.add(m.get(random.nextInt(9)));
                             key.set((i * 27) + keyb.get(i) - 1, keyb.get(i));
                             key.set((i * 27) + keyc.get(i) + 8, keyc.get(i));
                             key.set((i * 27) + keym.get(i) + 17, keym.get(i));
-                            cipherdec.add(keym.get(i) * ((keyb.get(i) * dec.get(i)) + keyc.get(i)));
+                            cipherdec.add(keym.get(i) * ((keyb.get(i) * dec.get(i)) + keyc.get(i)));    // formula: m*((b*d)+c)
 
                             int ans = cipherdec.get(i);
                             ArrayList<Integer> rems = new ArrayList<>(2);
-                            for (int count = 0; count < 2; count++) {
+                            for (int count = 0; count < 2; count++) {   // convert to base-39 in terms of the alphabet used at the top of this file
                                 rems.add(ans % 39);
                                 ans /= 39;
                             }
@@ -324,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                                 ctBox.setText(cttext);
                             }
 
-                            Random random = new Random();
+                            Random random = new Random();   // add nulls to public key
                             for (int i = 0; i < 27 * plaintext.length(); i++) {
                                 if (key.get(i) == 0) {
                                     int nulkey;
