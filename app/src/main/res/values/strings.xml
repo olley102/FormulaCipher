@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name" translatable="false">Formula Cipher</string>
+    <string name="preference_file_key" translatable="false">app.olley.formulacipher.PREFERENCE_FILE_KEY</string>
+    <string name="plaintext">Plaintext</string>
+    <string name="ciphertext">Ciphertext</string>
+    <string name="publickey">Public key</string>
+    <string name="privatekey">Private key</string>
+    <string name="convert">Convert</string>
+    <string name="copy">Copy</string>
+    <string name="console">Console</string>
+    <string name="version">Formula Encryption 1.0</string>
+    <string name="message">Message</string>
+    <string name="error1">INCOMPLETE input data</string>
+    <string name="error2">INVALID input data</string>
+    <string name="error3">FAILED incorrect private key</string>
+    <string name="success1">SUCCESS message encrypted</string>
+    <string name="success2">SUCCESS message decrypted</string>
+    <string name="success3">SUCCESS private key set</string>
+    <string name="copypttoast">Plaintext copied to clipboard</string>
+    <string name="copycttoast">Ciphertext copied to clipboard</string>
+    <string name="copykeytoast">Public key copied to clipboard</string>
+    <string name="key1">Key 1</string>
+    <string name="key2">Key 2</string>
+    <string name="key3">Key 3</string>
+    <string name="set">Set</string>
+    <string name="help">Help</string>
+    <string name="validchars" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ,.</string>
+    <string name="validlchars" translatable="false">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="b_default" translatable="false">175137452</string>
+    <string name="c_default" translatable="false">544337211</string>
+    <string name="m_default" translatable="false">223457172</string>
+    <string name="xnul_default" translatable="false">689</string>
+    <string name="ok">OK</string>
+    <string name="about">About</string>
+    <string name="about_text"><b>Formula Cipher 1.3</b>\nby Chanon Olley\n\n<b>Formula Encryption 2.0</b>\nMathematics and steganography in an ultra-secure 2-key cryptosystem.</string>
+    <string name="help_text">Each sub-key of the private key must be 9-digits long and not include a 0. There can be repeated digits, however, there must be 3 digits between 1 and 9 not used.\n\n123456789: invalid\n123456123: valid</string>
+    <string name="help2_text"><b>Encrypting a message</b>\nThe only supported characters are: A&#8211;Z, a&#8211;z, 0&#8211;9, commas, full-stops and spaces.\n\n<b>Decrypting a message</b>\nThe only supported characters for the ciphertext are: A&#8211;Z, 0&#8211;9, commas, full-stops and spaces.\n\nThe public key must not include a 0. The private key must be set correctly before decrypting.</string>
+</resources>
