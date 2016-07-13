@@ -1,10 +1,10 @@
 # Formula Cipher
 Cryptosystem in an Android app that uses several methods to ensure security.
 
-Formula Cipher 1.3
+Formula Cipher 1.3,
 Formula Encryption 2.0
 
-The code for Formula Encryption 1.0 was first developed and tested in C with Arduino. The creation of the Android app has come with major improvements, and thus making version 2.0.
+The code for Formula Encryption 1.0 ("FormulaC" - "C" for the language) was first developed and tested in C with Arduino. The creation of the Android app ("FormulaJ" - "J" for Java) has come with major improvements, and thus making version 2.0.
 
 The Formula Cipher app is an Android app that uses Formula Encryption to encrypt messages. For Marshmallow, the navigation bar color is modified and the apk can be found in /app. For others, or if you prefer, use the legacy apk also found in /app.
 
