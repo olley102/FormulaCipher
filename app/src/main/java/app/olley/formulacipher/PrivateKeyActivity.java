@@ -1,3 +1,10 @@
+/* PrivateKeyActivity
+    This activity is associated with activity_privatekey
+    It is only used to display and save the user-set private key
+    The private key is separated into key1, key2 and key3 - b, c and m are the variable names
+    The use of the variables and the private key are described in the MainActivity class
+*/
+
 package app.olley.formulacipher;
 
 import android.content.Context;
@@ -70,7 +77,7 @@ public class PrivateKeyActivity extends AppCompatActivity {
 
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        final SharedPreferences sharedPref = getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
+        final SharedPreferences sharedPref = getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);  // setup access to shared preferences
         String key1text = "";
         String key2text = "";
         String key3text = "";
@@ -104,7 +111,7 @@ public class PrivateKeyActivity extends AppCompatActivity {
                 }
                 else {
                     boolean error = false;
-                    SharedPreferences.Editor editor = sharedPref.edit();
+                    SharedPreferences.Editor editor = sharedPref.edit();    // write-access to shared preferences
                     for (int i = 0; i < 9; i++) {
                         if (key1Box.getText().charAt(i) - '0' != 0 && key2Box.getText().charAt(i) - '0' != 0 && key3Box.getText().charAt(i) - '0' != 0) {
                             String address1 = "b" + (i + '0');
@@ -113,7 +120,7 @@ public class PrivateKeyActivity extends AppCompatActivity {
                             b.set(i, key1Box.getText().charAt(i) - '0');
                             c.set(i, key2Box.getText().charAt(i) - '0');
                             m.set(i, key3Box.getText().charAt(i) - '0');
-                            editor.putInt(address1, b.get(i));
+                            editor.putInt(address1, b.get(i));  // keys are saved to shared prefs
                             editor.putInt(address2, c.get(i));
                             editor.putInt(address3, m.get(i));
                         }
@@ -122,7 +129,7 @@ public class PrivateKeyActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                    if (error) {
+                    if (error) {    // private key rules are explained in values/strings.xml or in the help dialog when running the app
                         Calendar calendar = Calendar.getInstance();
                         String formattedDate = simpleDateFormat.format(calendar.getTime());
                         String text = formattedDate + " " + getString(R.string.error2) + "\n" + console.getText().toString();
