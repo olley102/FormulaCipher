@@ -26,12 +26,17 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Character> alpha = new ArrayList<>();
     ArrayList<Character> lalpha = new ArrayList<>();
+    
+    /* alpha is the alphabet used to indicate what characters are supported
+        unfortunately, only a very limited number of characters are supported
+        due to this being only a test program
+    */
 
-    //private key
+    // private key
     ArrayList<Integer> b = new ArrayList<>(9);
     ArrayList<Integer> c = new ArrayList<>(9);
     ArrayList<Integer> m = new ArrayList<>(9);
-    ArrayList<Integer> xnul = new ArrayList<>(3);
+    ArrayList<Integer> xnul = new ArrayList<>(3);   // xnuls are used to confuse an interceptor
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -42,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.action_privatekey:
-                Intent intent = new Intent(this, PrivateKeyActivity.class);
+            case R.id.action_privatekey:    // user has chosen to access the private key layout
+                Intent intent = new Intent(this, PrivateKeyActivity.class); // go to PrivateKeyActivity
                 startActivity(intent);
                 return true;
-            case R.id.action_help2:
+            case R.id.action_help2: // user clicked on the help button
                 AlertDialog.Builder helpAlert = new AlertDialog.Builder(this);
                 helpAlert.setMessage(getText(R.string.help2_text))
                         .setTitle(getString(R.string.help))
@@ -57,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                         })
                         .create();
-                helpAlert.show();
+                helpAlert.show();   // show help dialog
                 return true;
-            case R.id.action_about:
+            case R.id.action_about: // user clicked on About in the drop-down menu
                 AlertDialog.Builder aboutAlert = new AlertDialog.Builder(this);
                 aboutAlert.setMessage(getText(R.string.about_text))
                         .setTitle(getString(R.string.about))
@@ -81,22 +86,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // activity_main layout is associated and is used when app is started
 
         final EditText ptBox = (EditText) findViewById(R.id.key1Box);
         final EditText ctBox = (EditText) findViewById(R.id.key2Box);
         final EditText keyBox = (EditText) findViewById(R.id.key3Box);
-        final TextView console = (TextView) findViewById(R.id.consoleText);
+        final TextView console = (TextView) findViewById(R.id.consoleText); // setup layout components for use
         assert ptBox != null;
         assert ctBox != null;
         assert keyBox != null;
-        assert console != null;
+        assert console != null; // console is the shaded box at the bottom of the layout, not an IDE console
         console.setSingleLine(false);
 
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss"); // used by console
 
         for (int i = 0; i < getString(R.string.validchars).length(); i++) {
-            alpha.add(getString(R.string.validchars).charAt(i));
+            alpha.add(getString(R.string.validchars).charAt(i));    // setup alphabets for encryption and decryption
             if (i < getString(R.string.validlchars).length()) lalpha.add(getString(R.string.validlchars).charAt(i));
         }
         for (int i = 0; i < 9; i++) {
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             m.add(0);
         }
 
-        final SharedPreferences sharedPref = getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
+        final SharedPreferences sharedPref = getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);  // setup access to user-saved private key
 
         Button copyptBtn = (Button) findViewById(R.id.copyptBtn);
         Button copyctBtn = (Button) findViewById(R.id.copyctBtn);
@@ -117,14 +122,14 @@ public class MainActivity extends AppCompatActivity {
         assert copyctBtn != null;
         assert copykeyBtn != null;
 
-        copyptBtn.setOnClickListener(new View.OnClickListener() {
+        copyptBtn.setOnClickListener(new View.OnClickListener() {   // setup copy button actions
             @Override
             public void onClick(View view) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("plaintext", ptBox.getText().toString());
                 clipboard.setPrimaryClip(clip);
                 Toast toast = Toast.makeText(getApplicationContext(), R.string.copypttoast, Toast.LENGTH_SHORT);
-                toast.show();
+                toast.show();   // display to user that text has been copied to clipboard
             }
         });
         copyctBtn.setOnClickListener(new View.OnClickListener() {
@@ -151,51 +156,64 @@ public class MainActivity extends AppCompatActivity {
         Button convertBtn = (Button) findViewById(R.id.convertBtn);
         assert convertBtn != null;
         convertBtn.setOnClickListener(new View.OnClickListener() {
+            
             @Override
             public void onClick(View view) {
                 for (int i = 0; i < 9; i++) {
                     String address1 = "b" + (i + '0');
                     String address2 = "c" + (i + '0');
                     String address3 = "m" + (i + '0');
-                    b.set(i, sharedPref.getInt(address1, getString(R.string.b_default).charAt(i) - '0'));   // get saved data
+                    b.set(i, sharedPref.getInt(address1, getString(R.string.b_default).charAt(i) - '0'));   // get saved private key
                     c.set(i, sharedPref.getInt(address2, getString(R.string.c_default).charAt(i) - '0'));
                     m.set(i, sharedPref.getInt(address3, getString(R.string.m_default).charAt(i) - '0'));
                 }
-                int xindex = 0;
+                
+                int xindex = 0; // count of how many exception-nulls found
                 for (int i = 1; i <= 9; i++) {
                     if ((!b.contains(i) || !c.contains(i) || !m.contains(i)) && !xnul.contains(i)) {
                         if (xindex < 3) {
-                            xnul.set(xindex, i);
+                            xnul.set(xindex, i);    // xnuls are computed by the digits between 1 and 9 that are not used in private key
                             xindex++;
                         }
                     }
                 }
-                String plaintext = ptBox.getText().toString();
+                
+                String plaintext = ptBox.getText().toString();  // get text typed by user
                 String ciphertext = ctBox.getText().toString();
                 String publickey = keyBox.getText().toString();
-                if (plaintext.matches("")) {
-                    if (ciphertext.matches("") || publickey.matches("")) {
-                        Calendar calendar = Calendar.getInstance();
+                
+                if (plaintext.matches("")) {    // if plaintext is empty, but ciphertext and public key are not, start decryption
+                    if (ciphertext.matches("") || publickey.matches("")) {  // ciphertext and public key should not be empty for decryption
+                        Calendar calendar = Calendar.getInstance(); // setup error to print to console
                         String formattedDate = simpleDateFormat.format(calendar.getTime());
                         String text = formattedDate + " " + getString(R.string.error1) + "\n" + console.getText().toString();
                         console.setText(text);
                     }
-                    else {
+                    else {  // start decryption
+                        
                         ArrayList<Integer> keyb = new ArrayList<>(ciphertext.length() / 2);
                         ArrayList<Integer> keyc = new ArrayList<>(ciphertext.length() / 2);
                         ArrayList<Integer> keym = new ArrayList<>(ciphertext.length() / 2);
-                        for (int i = 0; i < ciphertext.length() / 2; i++) {
-                            keyb.add(0);
+                        
+                        for (int i = 0; i < ciphertext.length() / 2; i++) { // ciphertext.length() / 2 == plaintext.length()
+                            /* NOTE:
+                                - keyb, keyc and keym are not the same as b, c and m
+                                - b, c and m are key1, key2 and key3 in the private key menu
+                                - keyb, keyc and keym are the useful digits in the public key
+                                - the key_ arrays are used in the decryption formula
+                                - the b, c and m arrays are used in the encryption formula
+                            */
+                            keyb.add(0);    // fill arrays with 0s to be used
                             keyc.add(0);
                             keym.add(0);
                         }
 
-                        int keyindex = 0;
+                        int keyindex = 0;   // index of the plaintext character being computed
                         boolean error = false;
 
                         for (int i = 0; i < 27 * (ciphertext.length() / 2); i++) {
                             if (!(xnul.contains(publickey.charAt(i) - '0'))) {
-                                if (publickey.charAt(i) - '0' == i - (keyindex * 27) + 1) {
+                                if (publickey.charAt(i) - '0' == i - (keyindex * 27) + 1) { // matching the public key digit to its index in the public key
                                     keyb.set(keyindex, publickey.charAt(i) - '0');
                                 }
                                 else if (publickey.charAt(i) - '0' == i - (keyindex * 27) - 8) {
@@ -231,8 +249,9 @@ public class MainActivity extends AppCompatActivity {
                             for (int index = 0; index < ciphertext.length() / 2; index++) {
                                 try {
                                     pt.add((alpha.get(((((alpha.indexOf(ciphertext.charAt(index * 2)) * 39) + alpha.indexOf(ciphertext.charAt((index * 2) + 1))) / keym.get(index)) - keyc.get(index)) / keyb.get(index))));
+                                    // the above line is the decryption formula. When changing the encryption formula, make sure this is the reverse
                                 }
-                                catch (Exception e) {
+                                catch (Exception e) {   // likely to be divide-by-zero error
                                     error = true;
                                     break;
                                 }
@@ -255,8 +274,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                else {
-                    if (!(ciphertext.matches("") && publickey.matches(""))) {
+                else {  // start encryption
+                    if (!(ciphertext.matches("") && publickey.matches(""))) {   // ciphertext and public key should be empty
                         Calendar calendar = Calendar.getInstance();
                         String formattedDate = simpleDateFormat.format(calendar.getTime());
                         String text = formattedDate + " " + getString(R.string.error1) + "\n" + console.getText().toString();
@@ -266,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
                         ArrayList<Integer> dec = new ArrayList<>(plaintext.length());
                         ArrayList<Integer> key = new ArrayList<>(27 * plaintext.length());
                         for (int i = 0; i < 27 * plaintext.length(); i++) {
-                            key.add(0);
+                            key.add(0); // setup public key
                         }
                         ArrayList<Integer> keyb = new ArrayList<>(plaintext.length());
                         ArrayList<Integer> keyc = new ArrayList<>(plaintext.length());
@@ -274,13 +293,13 @@ public class MainActivity extends AppCompatActivity {
                         ArrayList<Integer> cipherdec = new ArrayList<>(plaintext.length());
                         ArrayList<Character> ct = new ArrayList<>(plaintext.length() * 2);
                         for (int i = 0; i < plaintext.length() * 2; i++) {
-                            ct.add('A');
+                            ct.add('A');    // setup ciphertext
                         }
 
                         boolean error = false;
                         for (int i = 0; i < plaintext.length(); i++) {
                             if (alpha.contains(plaintext.charAt(i))) {
-                                dec.add(alpha.indexOf(plaintext.charAt(i)));    // convert characters into corresponding indeces
+                                dec.add(alpha.indexOf(plaintext.charAt(i)));    // convert characters into corresponding indeces of the alphabet (see top of program for use of alpha)
                             }
                             else if (lalpha.contains(plaintext.charAt(i))) {
                                 dec.add(lalpha.indexOf(plaintext.charAt(i)));
@@ -298,7 +317,8 @@ public class MainActivity extends AppCompatActivity {
                             key.set((i * 27) + keyc.get(i) + 8, keyc.get(i));
                             key.set((i * 27) + keym.get(i) + 17, keym.get(i));
                             cipherdec.add(keym.get(i) * ((keyb.get(i) * dec.get(i)) + keyc.get(i)));    // formula: m*((b*d)+c)
-
+                            // the above line is the encryption formula. This can be changed but make sure the decryption formula is the reverse
+                            
                             int ans = cipherdec.get(i);
                             ArrayList<Integer> rems = new ArrayList<>(2);
                             for (int count = 0; count < 2; count++) {   // convert to base-39 in terms of the alphabet used at the top of this file
