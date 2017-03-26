@@ -88,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // activity_main layout is associated and is used when app is started
 
-        final EditText ptBox = (EditText) findViewById(R.id.key1Box);
-        final EditText ctBox = (EditText) findViewById(R.id.key2Box);
-        final EditText keyBox = (EditText) findViewById(R.id.key3Box);
+        final EditText ptBox = (EditText) findViewById(R.id.key1Box);   // plaintext box
+        final EditText ctBox = (EditText) findViewById(R.id.key2Box);   // ciphertext box
+        final EditText keyBox = (EditText) findViewById(R.id.key3Box);  // public key box
         final TextView console = (TextView) findViewById(R.id.consoleText); // setup layout components for use
         assert ptBox != null;
         assert ctBox != null;
